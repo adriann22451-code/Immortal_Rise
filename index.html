@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Immortal's Rise</title>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b161a;--bg2:#13262b;--ink:#d8ebe3;--mut:#86a69b;--jade:#5fd1a5;--gold:#e6b85c;--red:#d2493a;--line:#2a4a50;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:radial-gradient(ellipse at 50% -10%,#1d3d44 0%,var(--bg) 62%) fixed;color:var(--ink);font:15px/1.5 'Noto Serif',Georgia,serif;min-height:100vh;user-select:none}
+main{max-width:520px;margin:0 auto;padding:10px 12px 20px}
+h1{font:400 34px/1 'Ma Shan Zheng','Noto Serif',serif;color:var(--gold);margin:2px 0 8px;text-align:center;letter-spacing:3px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:10px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.realm{color:var(--gold);font-weight:700}
+.bar{height:8px;background:#071013;border-radius:4px;overflow:hidden;margin:3px 0 6px;border:1px solid var(--line)}
+.bar i{display:block;height:100%;transition:width .3s}
+.hp i{background:var(--red)}.qi i{background:var(--jade)}.xp i{background:var(--gold)}
+.lab{font-size:12px;color:var(--mut)}
+.mapw{position:relative;border:2px solid var(--gold);border-radius:4px;overflow:hidden;margin-bottom:10px;box-shadow:0 0 24px rgba(95,209,165,.15)}
+canvas{display:block;width:100%;height:auto;background:#000}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.65) 100%)}
+.area{position:absolute;left:8px;top:6px;font:400 18px 'Ma Shan Zheng',serif;color:var(--gold);text-shadow:0 0 6px #000}
+.pad{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,52px);gap:6px;justify-content:center}
+.pad button:nth-child(1){grid-column:2}
+button{font:inherit;font-size:14px;color:var(--ink);background:#10262b;border:1px solid var(--line);border-radius:6px;padding:10px 8px;cursor:pointer;min-height:44px;touch-action:manipulation}
+button:hover:not(:disabled){border-color:var(--jade)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button:disabled{opacity:.38;cursor:default}
+button.p{border-color:var(--gold);color:var(--gold)}
+small{display:block;color:var(--mut);font-size:11px}
+#modal{position:fixed;inset:0;background:rgba(3,8,10,.82);display:none;align-items:center;justify-content:center;padding:14px;z-index:5}
+#modal .box{width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--bg2);border:2px solid var(--gold);border-radius:8px;padding:14px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btns .w{grid-column:1/-1}
+.scene{text-align:center;padding:6px}
+.big{font-size:64px;line-height:1.1;filter:drop-shadow(0 0 14px rgba(95,209,165,.4))}
+.boss .big{filter:drop-shadow(0 0 20px rgba(210,73,58,.8))}
+.shake{animation:sh .3s}
+@keyframes sh{20%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
+@media(prefers-reduced-motion:reduce){.shake{animation:none}}
+.log{height:96px;overflow:auto;font-size:13px;margin-top:6px}
+.log p{margin:0 0 3px}.h{color:var(--red)}.g{color:var(--jade)}.y{color:var(--gold)}
+.t{font:400 26px 'Ma Shan Zheng',serif;color:var(--gold);margin:0 0 6px;text-align:center}
+.q{font-size:12px;color:var(--mut);text-align:center;margin:6px 0 10px}
+</style></head><body><main>
+<h1>道 Immortal's Rise</h1>
+<div class="card" id="hud"></div>
+<div class="mapw"><canvas id="cv" width="416" height="288"></canvas><div class="vig"></div><div class="area" id="an"></div></div>
+<div class="pad"><button onclick="mv(0,-1)" aria-label="Up">▲</button><button onclick="mv(-1,0)" aria-label="Left">◀</button><button onclick="mv(0,1)" aria-label="Down">▼</button><button onclick="mv(1,0)" aria-label="Right">▶</button></div>
+<div class="q" id="qt"></div>
+<button style="display:block;margin:0 auto;background:none;border:0;color:var(--mut);font-size:12px;text-decoration:underline;min-height:0" onclick="if(confirm('Erase all progress?')){P=fresh();B=null;intro();hud();draw()}">Restart journey</button>
+</main><div id="modal"><div class="box" id="mb"></div></div>
+<script>
+const $=i=>document.getElementById(i);
+const M=[["#############","#~~.....G..P#","#~~.........#","#...##..A...#","#...#C......#","#.....e.....#","#..##.....e.#","#.S.........#","#############"],
+["#############","#p..#...e..P#","#.#.#.##....#","#.#...#..C#.#","#.###.#.##..#","#e....#..e..#","#.###.##.##.#","#...e....C..#","#############"],
+["#############","#p.........P#","#.##.....##.#","#.#C..G..A..#","#.........N.#","#.##..~~..#.#","#.#...~~..C.#","#...........#","#############"],
+["#############","#p..#....e.P#","#.#.#.##.#..#","#.#...#..#C##","#e..#.#.....#","#.#.#...##e.#","#.#...#.#...#","#.e.#...C.e.#","#############"],
+["#############","#p.....e...B#","#.##.###.##.#","#.#e.....#..#","#.#.###.##.e#","#...#C....#.#","#.#.#.###...#","#e#.....e.C.#","#############"]];
+const AN=["Azure Cloud Sect","Jade Mist Forest","Bamboo Dusk Village","Celestial Snow Peak","Blood Demon Cave"];
+const GC=[["#1d3a31","#234539"],["#14302d","#193a36"],["#33361f","#3b4025"],["#3a4d5a","#41586a"],["#2b1a1f","#341f25"]];
+const EN=[[["Spirit Fox","🦊",32,6,14,6],["Mist Wolf","🐺",42,8,18,8],["Forest Ghost","👻",38,9,18,8]],
+[["Jade Serpent","🐍",85,15,34,16],["Thunder Ape","🐒",95,18,40,18],["Demon Disciple","🥷",80,17,36,16]],
+[],
+[["Frost Bear","🐻",125,21,50,22],["Snow Wraith","⛄",110,23,52,22],["Ice Eagle","🦅",130,22,54,24]],
+[["Flame Tiger","🐯",150,26,60,28],["Blood Cultivator","🧛",170,30,68,30],["Stone Golem","🗿",210,27,72,30]]];
+const BOSS=["Blood Demon","👹",520,44,0,0];
+const R=["Qi Condensation","Dao Foundation","Golden Core"];
+const SK=[["Qi Sword Slash",1,0,1,"free"],["Dragon Palm",2,10,2,"10 Qi · 2x"],["Healing Seal",3,15,0,"15 Qi · +30% HP"],["Thunderstorm",5,25,3.4,"25 Qi · 3.4x"]];
+const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
+let P,B=null;
+const fresh=()=>({lv:1,exp:0,hp:60,mhp:60,qi:30,mq:30,atk:9,gold:10,pills:2,wpn:0,dead:[],a:0,x:2,y:7,seen:0,win:0});
+const need=()=>40*P.lv;
+function save(){try{localStorage.setItem("dao3",JSON.stringify(P))}catch(e){}}
+function load(){try{const s=localStorage.getItem("dao3");if(s)return JSON.parse(s)}catch(e){}return null}
+const bar=(c,v,m,l)=>`<div class="row lab"><span>${l}</span><span>${Math.max(0,Math.ceil(v))}/${m}</span></div><div class="bar ${c}"><i style="width:${Math.max(0,Math.min(100,v/m*100))}%"></i></div>`;
+function hud(){const r=R[Math.floor((P.lv-1)/3)];
+ $('hud').innerHTML=`<div class="row"><span class="realm">${r} · Level ${P.lv}</span><span>🪙 ${P.gold} · 💊 ${P.pills} · ⚔️ ${P.atk}</span></div>${bar('hp',P.hp,P.mhp,'HP')}${bar('qi',P.qi,P.mq,'Qi')}${P.lv<9?bar('xp',P.exp,need(),'Experience'):''}`;
+ $('an').textContent=AN[P.a];
+ $('qt').textContent=P.win?'Immortality achieved. You are the legend of the sect.':P.lv<3?'Goal: reach level 3, then enter the Jade Mist Forest (🌀 top right).':P.lv<5?'Goal: reach level 5, pass Bamboo Dusk Village and climb Celestial Snow Peak.':P.lv<7?'Goal: reach level 7 on the Snow Peak to unlock the Blood Demon Cave.':'Goal: defeat the Blood Demon at the end of the cave.';
+ save()}
+const eIdx=(x,y)=>(x*3+y)%3;
+function draw(){const c=$('cv').getContext('2d');c.textAlign='center';c.textBaseline='middle';
+ for(let y=0;y<9;y++)for(let x=0;x<13;x++){const t=M[P.a][y][x],k=P.a+':'+x+':'+y,d=P.dead.includes(k);
+  c.fillStyle=(t=='~')?'#1b4a5c':GC[P.a][(x+y)%2];c.fillRect(x*32,y*32,32,32);
+  c.font='25px serif';let g='';
+  if(t=='#')g=['🌲','🌲','🎋','🧊','🪨'][P.a];else if(t=='~'){c.fillStyle='rgba(150,220,240,.25)';c.fillRect(x*32+4,y*32+13,24,3)}
+  else if(t=='G')g='👴';else if(t=='A')g='🧪';else if(t=='N')g='👧';else if(t=='P'||t=='p')g='🌀';
+  else if(t=='C'&&!d)g='📦';else if(t=='e'&&!d)g=EN[P.a][eIdx(x,y)][1];else if(t=='B'&&!d)g='👹';
+  if(g)c.fillText(g,x*32+16,y*32+17)}
+ c.save();c.shadowColor='#5fd1a5';c.shadowBlur=14;c.font='26px serif';c.fillText('🧙',P.x*32+16,P.y*32+17);c.restore()}
+function mv(dx,dy){if(B||$('modal').style.display=='flex')return;const nx=P.x+dx,ny=P.y+dy,t=M[P.a][ny]?.[nx];
+ if(!t||t=='#'||t=='~')return;const k=P.a+':'+nx+':'+ny,d=P.dead.includes(k);
+ if(t=='e'&&!d)return fight(EN[P.a][eIdx(nx,ny)],k,0);
+ if(t=='B'&&!d)return fight(BOSS,k,1);
+ if(t=='G')return guru();if(t=='A')return shop();if(t=='N')return msg(['This village is safe. No monster dares come near since Elder Bai set the seal.','They say the Snow Peak hides the treasure chests of the gods.','The Blood Demon fears Thunderstorm. Learn that technique, Cultivator!'][rnd(0,2)]);
+ if(t=='P'){const nd=[3,4,5,7][P.a];if(P.lv<nd)return msg(`The mist gate rejects you. Reach level ${nd} first.`);P.a++;P.x=2;P.y=1;draw();return hud()}
+ if(t=='p'){P.a--;P.x=10;P.y=1;draw();return hud()}
+ if(t=='C'&&!d){P.dead.push(k);const g=rnd(12,22)*(P.a+1);P.gold+=g;let s=`Ancient chest opened: +${g} gold.`;if(Math.random()<.5){P.pills++;s+=' A Spirit Pill was inside.'}msg(s)}
+ P.x=nx;P.y=ny;P.qi=Math.min(P.mq,P.qi+1);draw();hud()}
+function show(h){$('mb').innerHTML=h;$('modal').style.display='flex'}
+function closeM(){$('modal').style.display='none';B=null;draw();hud()}
+function msg(s){show(`<p style="margin:0 0 10px">${s}</p><div class="btns"><button class="w" onclick="closeM()">Continue</button></div>`)}
+function intro(){show(`<div class="t">道 Legend of the Azure Cloud Sect</div><p>The gates of heaven have cracked. The Blood Demon has risen in the Demon Cave and devours the Qi of the whole sect. You, the last disciple of the Azure Cloud Sect, hold one sword and one resolve.</p><p class="lab">Meet the Elder at the sect, train against monsters, break through realm after realm, then stop the demon.</p><div class="btns"><button class="w p" onclick="closeM()">Begin the journey</button></div>`)}
+function guru(){const t=P.win?'You have surpassed us all, disciple. Even the heavens bow to you.':P.lv<3?'Disciple, your body is still frail. Defeat the foxes and wolves around the sect, reach level 3, and the mist gate will open.':P.lv<7?'The Mist Forest, Bamboo Village, then the Snow Peak: climb through all three. Reach level 7 before you touch the Demon Cave gate.':'The time has come. The Blood Demon waits at the end of the cave. Bring pills and do not hesitate.';
+ show(`<div class="scene"><div class="big">👴</div><b>${P.a?'Healer Lian':'Elder Bai'}</b></div><p>${t}</p><div class="btns"><button onclick="heal()">Heal me<small>free</small></button><button onclick="closeM()">Farewell</button></div>`)}
+function heal(){P.hp=P.mhp;P.qi=P.mq;msg('Warm Qi flows through you. HP and Qi fully restored.')}
+function shop(){const w=60+P.wpn*50;show(`<div class="scene"><div class="big">🧪</div><b>Alchemist Lan</b></div><p>Gold: 🪙 ${P.gold}</p><div class="btns"><button onclick="buy(0)" ${P.gold<25?'disabled':''}>Spirit Pill<small>25 gold · +60 HP</small></button><button onclick="buy(1)" ${P.gold<w?'disabled':''}>Forge Sword<small>${w} gold · +4 attack</small></button><button class="w" onclick="closeM()">Done</button></div>`)}
+function buy(k){if(k==0&&P.gold>=25){P.gold-=25;P.pills++}if(k==1){const w=60+P.wpn*50;if(P.gold>=w){P.gold-=w;P.wpn++;P.atk+=4}}hud();shop()}
+let L=[];const say=(t,c)=>{L.unshift(`<p class="${c||''}">${t}</p>`);L=L.slice(0,20)};
+function fight(e,k,boss){B={n:e[0],i:e[1],hp:e[2],m:e[2],atk:e[3],xp:e[4],g:e[5],k,boss,done:0,res:0};L=[];say(boss?'The cave trembles. A blood aura fills the air!':`${e[0]} blocks your path!`,'h');bt()}
+function bt(){let b=SK.map((s,i)=>`<button onclick="act(${i})" ${P.lv<s[1]||P.qi<s[2]?'disabled':''}>${s[0]}<small>${P.lv<s[1]?'Level '+s[1]:s[4]}</small></button>`).join('');
+ b+=`<button onclick="act('m')">Breathe<small>+12 Qi</small></button><button onclick="act('p')" ${P.pills<1?'disabled':''}>Spirit Pill<small>+60 HP · ${P.pills}</small></button>`;
+ if(!B.boss)b+=`<button class="w" onclick="act('f')">Flee</button>`;
+ if(B.done)b=`<button class="w p" onclick="${B.res==2?'ending()':'closeM()'}">Continue</button>`;
+ show(`<div class="scene ${B.boss?'boss':''}" id="sc"><div class="big">${B.i}</div><b>${B.n}</b>${bar('hp',B.hp,B.m,'Enemy')}</div>${bar('hp',P.hp,P.mhp,'Your HP')}${bar('qi',P.qi,P.mq,'Qi')}<div class="log">${L.join('')}</div><div class="btns">${b}</div>`)}
+function act(k){if(!B||B.done)return;let d=0;
+ if(typeof k=='number'){const s=SK[k];P.qi-=s[2];if(s[3]){d=rnd(P.atk*s[3]*.9,P.atk*s[3]*1.2);say(`${s[0]}! ${d} damage.`,'g')}else{const h=Math.round(P.mhp*.3);P.hp=Math.min(P.mhp,P.hp+h);say(`${s[0]}: +${h} HP.`,'g')}}
+ if(k=='m'){P.qi=Math.min(P.mq,P.qi+12);say('You steady your breath. +12 Qi.','g')}
+ if(k=='p'){P.pills--;P.hp=Math.min(P.mhp,P.hp+60);say('Spirit Pill swallowed. +60 HP.','g')}
+ if(k=='f'){if(Math.random()<.55){say('You escaped.');B.done=1;B.res=3;return bt()}say('Failed to flee!','h')}
+ if(d){B.hp-=d;const s=$('sc');if(s){s.classList.add('shake')}}
+ if(B.hp<=0)return win();
+ const e=rnd(B.atk*.8,B.atk*1.1);P.hp-=e;say(`${B.n} attacks! -${e} HP.`,'h');
+ if(P.hp<=0)return lose();bt();hud()}
+function win(){B.done=1;if(B.boss){B.res=2;say('The Blood Demon dissolves into red mist!','y');P.win=1}else{B.res=1;P.exp+=B.xp;P.gold+=B.g;say(`${B.n} defeated. +${B.xp} exp, +${B.g} gold.`,'y');if(Math.random()<.25){P.pills++;say('The enemy dropped a Spirit Pill.','g')}lvup()}
+ P.dead.push(B.k);bt();hud()}
+function lvup(){while(P.lv<9&&P.exp>=need()){P.exp-=need();P.lv++;P.mhp+=14;P.mq+=6;P.atk+=3;P.hp=P.mhp;P.qi=P.mq;say(`Level up! You reached level ${P.lv}.`+(SK.find(s=>s[1]==P.lv)?` New technique: ${SK.find(s=>s[1]==P.lv)[0]}.`:''),'y');if(P.lv==4||P.lv==7){P.atk+=5;P.mhp+=20;say(`✨ Breakthrough to the ${R[Math.floor((P.lv-1)/3)]} realm! Your power surges.`,'y')}}}
+function lose(){B.done=1;B.res=1;P.hp=Math.ceil(P.mhp/2);P.gold=Math.floor(P.gold/2);P.a=0;P.x=2;P.y=7;say('You collapse and wake up at the sect. Half your gold is lost.','h');bt();hud()}
+function ending(){B=null;show(`<div class="t">道 Immortality</div><p>The Blood Demon is gone, and the Qi of heaven flows back into the sect. Elder Bai bows to you, and behind the clouds, the gates of heaven open.</p><p class="lab">You reached level ${P.lv} and carry ${P.gold} gold. The end, for now.</p><div class="btns"><button class="w p" onclick="closeM()">Return to the world</button></div>`)}
+document.addEventListener('keydown',e=>{const m={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(m){e.preventDefault();mv(...m)}});
+P=load()||fresh();hud();draw();if(!P.seen){P.seen=1;intro()}
+</script></body></html>
