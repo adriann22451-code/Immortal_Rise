@@ -122,14 +122,43 @@ small{display:block;color:var(--mut);font-size:11px}
 .act span{font-size:22px;line-height:1}.act small{display:block;font-size:9px;color:var(--mut)}
 .act:active{transform:scale(.93)}
 #toast{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translateX(-50%);background:rgba(8,18,21,.92);border:1px solid var(--gold);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:25}
-#ldr{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(ellipse at 50% 30%,#1d3d44,#0b161a 70%);color:var(--ink);text-align:center;padding:20px}
-#ldr .k{font:400 64px/1 'Ma Shan Zheng','Noto Serif',serif;color:var(--gold)}
-#ldr h2{margin:0;font:400 28px 'Ma Shan Zheng','Noto Serif',serif;color:var(--gold);letter-spacing:3px}
-.ldbar{width:min(260px,70vw);height:10px;background:#071013;border:1px solid var(--line);border-radius:5px;overflow:hidden}
-.ldbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--jade),var(--gold));transition:width .2s}
-#ldr p{margin:0;font-size:13px;color:var(--mut)}
+#ldr{position:fixed;inset:0;z-index:30;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--ink);background:linear-gradient(#050d12 0%,#0c2229 45%,#163c40 100%);transition:opacity .7s}
+#ldr.out{opacity:0;pointer-events:none}
+#ldr .moon{position:absolute;top:7%;left:50%;width:150px;height:150px;margin-left:-75px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fffbe6,#f1e2b0 55%,#cbb27a);box-shadow:0 0 60px 20px rgba(244,217,140,.28),0 0 160px 60px rgba(95,209,165,.12);opacity:.92}
+#ldr .stars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1.5px 1.5px at 28% 8%,#fff,transparent),radial-gradient(1px 1px at 40% 24%,#cfe,transparent),radial-gradient(1.5px 1.5px at 66% 12%,#fff,transparent),radial-gradient(1px 1px at 78% 26%,#fff,transparent),radial-gradient(1.5px 1.5px at 90% 10%,#fec,transparent),radial-gradient(1px 1px at 6% 36%,#fff,transparent),radial-gradient(1px 1px at 94% 40%,#cfe,transparent);animation:tw 4s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.55}to{opacity:1}}
+#ldr .mt{position:absolute;left:-5%;right:-5%;bottom:0}
+#ldr .m1{height:30%;background:#071317;clip-path:polygon(0 100%,0 60%,8% 40%,16% 62%,26% 30%,38% 66%,48% 44%,60% 70%,72% 36%,84% 64%,94% 42%,100% 58%,100% 100%)}
+#ldr .m2{height:42%;background:#0d242a;opacity:.92;clip-path:polygon(0 100%,0 50%,12% 28%,22% 55%,34% 18%,46% 52%,58% 24%,70% 58%,82% 22%,92% 50%,100% 34%,100% 100%)}
+#ldr .m3{height:54%;background:#17393f;opacity:.7;clip-path:polygon(0 100%,0 62%,10% 34%,20% 58%,30% 14%,44% 56%,56% 30%,68% 60%,80% 12%,90% 52%,100% 36%,100% 100%)}
+#ldr .mist{position:absolute;left:-50%;width:200%;height:30%;bottom:8%;background:radial-gradient(ellipse at 30% 60%,rgba(190,230,220,.17),transparent 60%),radial-gradient(ellipse at 75% 40%,rgba(190,230,220,.12),transparent 55%);animation:drift 24s linear infinite}
+#ldr .mist.b{bottom:22%;animation-duration:36s;animation-direction:reverse;opacity:.8}
+@keyframes drift{to{transform:translateX(25%)}}
+#ldr .fl i{position:absolute;bottom:-10px;left:var(--x);width:5px;height:5px;border-radius:50%;background:#9ff0cf;box-shadow:0 0 8px 2px rgba(159,240,207,.7);opacity:0;animation:rise var(--d) linear var(--w) infinite}
+#ldr .fl i:nth-child(3n){background:#f4d98c;box-shadow:0 0 8px 2px rgba(244,217,140,.7)}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}15%{opacity:.95}100%{transform:translate(var(--dx),-105vh);opacity:0}}
+#ldr .lc{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px;text-align:center}
+#ldr .rune{width:min(46vw,190px);height:auto;filter:drop-shadow(0 0 14px rgba(230,184,92,.45))}
+#ldr .rg{transform-box:fill-box;transform-origin:center;animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#ldr .dao{animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.72}}
+#ldr h2{margin:4px 0 0;font:400 42px/1 'Ma Shan Zheng','Noto Serif',serif;letter-spacing:4px;background:linear-gradient(#fff3c4,#e6b85c 60%,#b9822a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))}
+#ldr .sub{font-size:12px;letter-spacing:3px;color:var(--mut)}
+#ldr .ldbar{position:relative;width:min(280px,72vw);height:14px;margin-top:16px;border-radius:8px;background:#06100f;border:2px solid var(--gold);box-shadow:0 0 14px rgba(230,184,92,.25),inset 0 2px 4px #000;overflow:hidden}
+#ldr .ldbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2f9c78,#5fd1a5 60%,#f4d98c);position:relative;overflow:hidden}
+#ldr .ldbar i::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);animation:shim 1.4s linear infinite}
+@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+#ldr p{margin:0;font-size:13px;min-height:18px}
+#ldr .tap{display:none;font:400 24px 'Ma Shan Zheng','Noto Serif',serif;color:var(--gold);letter-spacing:3px;animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+#ldr.rdy .tap{display:block}#ldr.rdy .ldbar,#ldr.rdy #ldp{display:none}
+#ldr .tip{max-width:80vw;color:var(--mut);font-size:12px;margin-top:12px}
+@media(prefers-reduced-motion:reduce){#ldr *{animation:none!important}}
 </style></head><body>
-<div id="ldr"><div class="k">道</div><h2>Immortal's Rise</h2><div class="ldbar"><i id="ldb"></i></div><p id="ldp">Loading... 0%</p><p>Tip: monsters respawn as you walk, so keep training.</p></div>
+<div id="ldr"><div class="stars"></div><div class="moon"></div><div class="mt m3"></div><div class="mt m2"></div><div class="mist b"></div><div class="mt m1"></div><div class="mist"></div><div class="fl"><i style="--x:6%;--d:11s;--w:-2s;--dx:30px"></i><i style="--x:14%;--d:9s;--w:-6s;--dx:-40px"></i><i style="--x:22%;--d:13s;--w:-1s;--dx:50px"></i><i style="--x:31%;--d:10s;--w:-8s;--dx:-30px"></i><i style="--x:40%;--d:12s;--w:-4s;--dx:40px"></i><i style="--x:48%;--d:9s;--w:-10s;--dx:-50px"></i><i style="--x:57%;--d:14s;--w:-3s;--dx:30px"></i><i style="--x:64%;--d:10s;--w:-7s;--dx:-40px"></i><i style="--x:72%;--d:12s;--w:-5s;--dx:50px"></i><i style="--x:80%;--d:11s;--w:-9s;--dx:-30px"></i><i style="--x:88%;--d:13s;--w:-2s;--dx:40px"></i><i style="--x:94%;--d:9s;--w:-6s;--dx:-50px"></i><i style="--x:36%;--d:15s;--w:-11s;--dx:30px"></i><i style="--x:68%;--d:8s;--w:-12s;--dx:-30px"></i></div>
+<div class="lc"><svg class="rune" viewBox="0 0 200 200"><defs><path id="rp" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs><g class="rg"><circle cx="100" cy="100" r="94" fill="none" stroke="#e6b85c" stroke-width="1.5" stroke-dasharray="2 6"/><circle cx="100" cy="100" r="68" fill="none" stroke="#5fd1a5" stroke-width="1" opacity=".6"/><text font-size="17" fill="#e6b85c" letter-spacing="9"><textPath href="#rp">天 地 玄 黄 宇 宙 洪 荒 日 月 盈 昃</textPath></text></g><text class="dao" x="100" y="124" text-anchor="middle" font-size="70" fill="#f4d98c" font-family="'Ma Shan Zheng',serif">道</text></svg>
+<h2>Immortal's Rise</h2><div class="sub">Legend of the Azure Cloud Sect</div><div class="ldbar"><i id="ldb"></i></div><p id="ldp">Gathering spirit qi...</p><div class="tap">Tap to begin</div><p class="tip" id="ldt">Tip: Monsters respawn as you walk, so keep training.</p></div></div>
 <main class="gm">
 <div class="top"><div class="av"><img id="avi" alt="Hero"><b id="lvb"></b></div><div class="hb" id="hud"></div><div class="res" id="res"></div></div>
 <div class="mapw"><canvas id="cv" width="432" height="432"></canvas><div class="vig"></div><div class="area" id="an"></div></div>
@@ -259,9 +288,17 @@ function lose(){B.done=1;B.res=1;P.hp=Math.ceil(P.mhp/2);P.gold=Math.floor(P.gol
 function ending(){B=null;$('ar').style.display='none';show(`<div class="t">道 Immortality</div><p>The Blood Demon is gone, and the Qi of heaven flows back into the sect. Elder Bai bows to you, and behind the clouds, the gates of heaven open.</p><p class="lab">You reached level ${P.lv} and carry ${P.gold} gold. The end, for now.</p><div class="btns"><button class="w p" onclick="closeM()">Return to the world</button></div>`)}
 document.addEventListener('keydown',e=>{const m={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(m){e.preventDefault();mv(...m)}});
 P=load()||fresh();P.rs=P.rs||{};P.st=P.st||0;P.dead=P.dead.filter(k=>{const q=k.split(':');return M[q[0]][q[2]][q[1]]!='e'});const areaKeys=a=>{const k=['Hero','obj_portal','obj_chest',TEX[a],OBJ[a]];if(a==0||a==2)k.push('tile_water');if(a==0)k.push('Elder Bai','Alchemist Lan');if(a==2)k.push('Healer Lian','Alchemist Lan','Village girl');EN[a].forEach(e=>k.push(e[0]));if(a==4)k.push('Blood Demon');return k};
-let started=0;function start(){if(started)return;started=1;$('avi').src=SPD.Hero||'';bindPad();cam=Math.max(0,Math.min(13-VC,P.x-(VC>>1)));hud();draw();$('ldr').style.display='none';if(!P.seen){P.seen=1;intro()}
+let started=0;function start(){if(started)return;started=1;$('avi').src=SPD.Hero||'';bindPad();cam=Math.max(0,Math.min(13-VC,P.x-(VC>>1)));hud();draw();
  const rest=Object.keys(SRCM).filter(k=>!IMG[k]);rest.unshift(ARK[P.a]);let i=0;const nx=()=>{if(i<rest.length)loadImg(rest[i++]).then(()=>setTimeout(nx,30))};nx();nx()}
-function boot(){const ks=areaKeys(P.a),b=$('ldb'),t=$('ldp');let n=0;
- Promise.all(ks.map(k=>loadImg(k).then(()=>{n++;const p=Math.round(n/ks.length*100);b.style.width=p+'%';t.textContent='Loading... '+p+'%'}))).then(start);setTimeout(start,9000)}
+const MIN=3200,TIPS=['Monsters respawn as you walk, so keep training.','Elder Bai restores your HP for free.','Reach level 5 to learn Thunderstorm.','Spirit Pills heal you anywhere, even outside battle.','Hold a direction button to keep walking.','Tap the scroll button to check your current goal.'],STG=['Gathering spirit qi...','Awakening the sect...','Opening the gates of heaven...'];
+let real=0,shown=0,rdy=0,ti=0,tI=0;const t0=Date.now();
+function begin(){if(rdy!=1)return;rdy=2;clearInterval(tI);const l=$('ldr');l.classList.add('out');setTimeout(()=>{l.style.display='none'},750);if(!P.seen){P.seen=1;intro()}}
+function lt(){const tg=Math.min(real,(Date.now()-t0)/MIN);shown+=(tg-shown)*.18;if(tg>=1&&1-shown<.004)shown=1;
+ $('ldb').style.width=(shown*100)+'%';$('ldp').textContent=STG[Math.min(2,Math.floor(shown*3))];
+ if(shown>=1&&started){rdy=1;$('ldr').classList.add('rdy')}else requestAnimationFrame(lt)}
+function boot(){const ks=areaKeys(P.a);let n=0;
+ Promise.all(ks.map(k=>loadImg(k).then(()=>{n++;real=n/ks.length}))).then(start);setTimeout(()=>{real=1;start()},9000);
+ tI=setInterval(()=>{ti=(ti+1)%TIPS.length;$('ldt').textContent='Tip: '+TIPS[ti]},2800);lt()}
+$('ldr').addEventListener('click',begin);document.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' ')begin()});
 boot();
 </script></body></html>
