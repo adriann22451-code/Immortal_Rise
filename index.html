@@ -39,7 +39,16 @@ small{display:block;color:var(--mut);font-size:11px}
 .big img{display:block;margin:0 auto}
 .shake{animation:sh .3s}
 @keyframes sh{20%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
-@media(prefers-reduced-motion:reduce){.shake{animation:none}}
+@media(prefers-reduced-motion:reduce){.shake,.hit .big,.atk .big,.pf,.dmg{animation:none}}
+.scene{position:relative}
+.turn{font:400 16px 'Ma Shan Zheng','Noto Serif',serif;letter-spacing:1px;margin-bottom:4px}.turn.p{color:var(--jade)}.turn.e{color:var(--red)}
+.dmg{position:absolute;left:50%;top:42%;font-weight:700;font-size:28px;text-shadow:0 0 6px #000;animation:fl .9s forwards;pointer-events:none}
+.dmg.h{color:var(--red);top:8%}.dmg.g{color:var(--gold)}
+@keyframes fl{from{transform:translate(-50%,0);opacity:1}to{transform:translate(-50%,-46px);opacity:0}}
+.hit .big{animation:sh .35s}.atk .big{animation:lunge .4s}
+@keyframes lunge{40%{transform:translateY(22px) scale(1.12)}}
+.pf{position:relative;animation:pf .45s}
+@keyframes pf{30%{background:rgba(210,73,58,.35)}}
 .log{height:96px;overflow:auto;font-size:13px;margin-top:6px}
 .log p{margin:0 0 3px}.h{color:var(--red)}.g{color:var(--jade)}.y{color:var(--gold)}
 .t{font:400 26px 'Ma Shan Zheng',serif;color:var(--gold);margin:0 0 6px;text-align:center}
@@ -115,20 +124,24 @@ function shop(){const w=60+P.wpn*50;show(`<div class="scene"><div class="big">${
 function buy(k){if(k==0&&P.gold>=25){P.gold-=25;P.pills++}if(k==1){const w=60+P.wpn*50;if(P.gold>=w){P.gold-=w;P.wpn++;P.atk+=4}}hud();shop()}
 let L=[];const say=(t,c)=>{L.unshift(`<p class="${c||''}">${t}</p>`);L=L.slice(0,20)};
 function fight(e,k,boss){B={n:e[0],i:e[1],hp:e[2],m:e[2],atk:e[3],xp:e[4],g:e[5],k,boss,done:0,res:0};L=[];say(boss?'The cave trembles. A blood aura fills the air!':`${e[0]} blocks your path!`,'h');bt()}
-function bt(){let b=SK.map((s,i)=>`<button onclick="act(${i})" ${P.lv<s[1]||P.qi<s[2]?'disabled':''}>${s[0]}<small>${P.lv<s[1]?'Level '+s[1]:s[4]}</small></button>`).join('');
- b+=`<button onclick="act('m')">Breathe<small>+12 Qi</small></button><button onclick="act('p')" ${P.pills<1?'disabled':''}>Spirit Pill<small>+60 HP · ${P.pills}</small></button>`;
- if(!B.boss)b+=`<button class="w" onclick="act('f')">Flee</button>`;
+function bt(fx){const bz=B.busy&&!B.done,off=bz?'disabled':'';
+ let b=SK.map((s,i)=>`<button onclick="act(${i})" ${bz||P.lv<s[1]||P.qi<s[2]?'disabled':''}>${s[0]}<small>${P.lv<s[1]?'Level '+s[1]:s[4]}</small></button>`).join('');
+ b+=`<button onclick="act('m')" ${off}>Breathe<small>+12 Qi</small></button><button onclick="act('p')" ${bz||P.pills<1?'disabled':''}>Spirit Pill<small>+60 HP · ${P.pills}</small></button>`;
+ if(!B.boss)b+=`<button class="w" onclick="act('f')" ${off}>Flee</button>`;
  if(B.done)b=`<button class="w p" onclick="${B.res==2?'ending()':'closeM()'}">Continue</button>`;
- show(`<div class="scene ${B.boss?'boss':''}" id="sc"><div class="big">${sp(B.n,B.boss?170:125)||B.i}</div><b>${B.n}</b>${bar('hp',B.hp,B.m,'Enemy')}</div>${bar('hp',P.hp,P.mhp,'Your HP')}${bar('qi',P.qi,P.mq,'Qi')}<div class="log">${L.join('')}</div><div class="btns">${b}</div>`)}
-function act(k){if(!B||B.done)return;let d=0;
+ const tn=B.done?'':(bz?"Enemy's turn...":'Your turn'),fe=fx&&fx.t=='e',fp=fx&&fx.t=='p';
+ show(`<div class="scene ${B.boss?'boss':''} ${fx?fx.a:''}" id="sc"><div class="turn ${bz?'e':'p'}">${tn}</div><div class="big">${sp(B.n,B.boss?170:125)||B.i}</div><b>${B.n}</b>${bar('hp',B.hp,B.m,'Enemy')}${fe?`<div class="dmg ${fx.c}">${fx.v}</div>`:''}</div><div class="${fp?'pf':''}">${bar('hp',P.hp,P.mhp,'Your HP')}${bar('qi',P.qi,P.mq,'Qi')}${fp?`<div class="dmg ${fx.c}">${fx.v}</div>`:''}</div><div class="log">${L.join('')}</div><div class="btns">${b}</div>`)}
+function act(k){if(!B||B.done||B.busy)return;let d=0,fx=null;
  if(typeof k=='number'){const s=SK[k];P.qi-=s[2];if(s[3]){d=rnd(P.atk*s[3]*.9,P.atk*s[3]*1.2);say(`${s[0]}! ${d} damage.`,'g')}else{const h=Math.round(P.mhp*.3);P.hp=Math.min(P.mhp,P.hp+h);say(`${s[0]}: +${h} HP.`,'g')}}
  if(k=='m'){P.qi=Math.min(P.mq,P.qi+12);say('You steady your breath. +12 Qi.','g')}
  if(k=='p'){P.pills--;P.hp=Math.min(P.mhp,P.hp+60);say('Spirit Pill swallowed. +60 HP.','g')}
  if(k=='f'){if(Math.random()<.55){say('You escaped.');B.done=1;B.res=3;return bt()}say('Failed to flee!','h')}
- if(d){B.hp-=d;const s=$('sc');if(s){s.classList.add('shake')}}
- if(B.hp<=0)return win();
- const e=rnd(B.atk*.8,B.atk*1.1);P.hp-=e;say(`${B.n} attacks! -${e} HP.`,'h');
- if(P.hp<=0)return lose();bt();hud()}
+ B.busy=1;if(d){B.hp-=d;fx={a:'hit',t:'e',v:'-'+d,c:'g'}}
+ hud();bt(fx);
+ if(B.hp<=0)return setTimeout(()=>{if(B){B.busy=0;win()}},750);
+ setTimeout(enemyTurn,950)}
+function enemyTurn(){if(!B||B.done)return;const e=rnd(B.atk*.8,B.atk*1.1);P.hp-=e;say(`${B.n} attacks! -${e} HP.`,'h');hud();bt({a:'atk',t:'p',v:'-'+e,c:'h'});
+ setTimeout(()=>{if(!B||B.done)return;B.busy=0;if(P.hp<=0)return lose();bt();hud()},850)}
 function win(){B.done=1;if(B.boss){B.res=2;say('The Blood Demon dissolves into red mist!','y');P.win=1}else{B.res=1;P.exp+=B.xp;P.gold+=B.g;say(`${B.n} defeated. +${B.xp} exp, +${B.g} gold.`,'y');if(Math.random()<.25){P.pills++;say('The enemy dropped a Spirit Pill.','g')}lvup()}
  P.dead.push(B.k);bt();hud()}
 function lvup(){while(P.lv<9&&P.exp>=need()){P.exp-=need();P.lv++;P.mhp+=14;P.mq+=6;P.atk+=3;P.hp=P.mhp;P.qi=P.mq;say(`Level up! You reached level ${P.lv}.`+(SK.find(s=>s[1]==P.lv)?` New technique: ${SK.find(s=>s[1]==P.lv)[0]}.`:''),'y');if(P.lv==4||P.lv==7){P.atk+=5;P.mhp+=20;say(`✨ Breakthrough to the ${R[Math.floor((P.lv-1)/3)]} realm! Your power surges.`,'y')}}}
