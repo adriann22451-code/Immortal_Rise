@@ -95,6 +95,33 @@ small{display:block;color:var(--mut);font-size:11px}
 .log p{margin:0 0 3px}.h{color:var(--red)}.g{color:var(--jade)}.y{color:var(--gold)}
 .t{font:400 26px 'Ma Shan Zheng',serif;color:var(--gold);margin:0 0 6px;text-align:center}
 .q{font-size:12px;color:var(--mut);text-align:center;margin:6px 0 10px}
+.gm{max-width:520px;margin:0 auto;padding:10px 12px 8px}
+.top{display:flex;gap:10px;align-items:center;padding:9px 10px;margin-bottom:10px;background:linear-gradient(#18353d,#0e2127);border:1px solid var(--line);border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.45)}
+.av{position:relative;flex:0 0 58px;height:58px;border-radius:50%;border:2px solid var(--gold);background:radial-gradient(circle at 40% 30%,#2f6159,#0b1a1e);box-shadow:0 0 12px rgba(230,184,92,.3)}
+.av img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 8%}
+.av b{position:absolute;right:-6px;bottom:-6px;min-width:24px;height:24px;border-radius:12px;padding:0 4px;background:var(--gold);color:#2a1a00;font:700 12px/20px 'Noto Serif',serif;text-align:center;border:2px solid #0e2127}
+.hb{flex:1;min-width:0}
+.hb .rn{font:700 12px 'Noto Serif',serif;color:var(--gold);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gb{position:relative;height:15px;border-radius:8px;background:#06100f;border:1px solid #2a4a50;overflow:hidden;margin-bottom:4px}
+.gb i{position:absolute;inset:0 auto 0 0;display:block;border-radius:8px;transition:width .3s}
+.gb.hp i{background:linear-gradient(#ff7a68,#c4392b 55%,#8e251b)}
+.gb.qi i{background:linear-gradient(#8ff0cb,#3fb58a 55%,#277a5d)}
+.gb.xp{height:7px;margin-bottom:0}.gb.xp i{background:linear-gradient(#f4d98c,#c89a3c)}
+.gb span{position:relative;z-index:1;display:block;text-align:center;font:700 10px/13px 'Noto Serif',serif;color:#fff;text-shadow:0 1px 2px #000}
+.res{display:flex;flex-direction:column;gap:4px}
+.rc{background:#0a171b;border:1px solid var(--line);border-radius:10px;padding:2px 8px;font-size:12px;white-space:nowrap}
+.mapw{border-radius:12px;box-shadow:0 0 0 3px #0b161a,0 0 0 4px rgba(230,184,92,.4),0 8px 24px rgba(0,0,0,.5)}
+.ctl{display:flex;justify-content:space-between;align-items:center;padding:12px 4px 14px}
+.dpad{display:grid;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(3,54px);gap:3px;grid-template-areas:". u ." "l c r" ". d ."}
+.dp{border-radius:14px;font-size:20px;color:var(--gold);background:linear-gradient(#193139,#0d1b20);border:1.5px solid #3a5f66;touch-action:none;padding:0;min-height:0;user-select:none}
+.dp:active{background:#24474f;border-color:var(--jade)}
+.dp.u{grid-area:u}.dp.l{grid-area:l}.dp.r{grid-area:r}.dp.d{grid-area:d}
+.dc{grid-area:c;border-radius:50%;background:radial-gradient(#27474f,#0b161a);border:1.5px solid #2a4a50;margin:9px}
+.acts{display:grid;grid-template-columns:repeat(2,56px);gap:10px}
+.act{width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;min-height:0;background:radial-gradient(circle at 35% 30%,#2f6159,#0b1a1e 72%);border:2px solid var(--gold);box-shadow:inset 0 0 8px rgba(230,184,92,.25),0 3px 8px #000}
+.act span{font-size:22px;line-height:1}.act small{display:block;font-size:9px;color:var(--mut)}
+.act:active{transform:scale(.93)}
+#toast{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translateX(-50%);background:rgba(8,18,21,.92);border:1px solid var(--gold);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:25}
 #ldr{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(ellipse at 50% 30%,#1d3d44,#0b161a 70%);color:var(--ink);text-align:center;padding:20px}
 #ldr .k{font:400 64px/1 'Ma Shan Zheng','Noto Serif',serif;color:var(--gold)}
 #ldr h2{margin:0;font:400 28px 'Ma Shan Zheng','Noto Serif',serif;color:var(--gold);letter-spacing:3px}
@@ -103,13 +130,12 @@ small{display:block;color:var(--mut);font-size:11px}
 #ldr p{margin:0;font-size:13px;color:var(--mut)}
 </style></head><body>
 <div id="ldr"><div class="k">道</div><h2>Immortal's Rise</h2><div class="ldbar"><i id="ldb"></i></div><p id="ldp">Loading... 0%</p><p>Tip: monsters respawn as you walk, so keep training.</p></div>
-<main>
-<h1>道 Immortal's Rise</h1>
-<div class="card" id="hud"></div>
-<div class="mapw"><canvas id="cv" width="624" height="432"></canvas><div class="vig"></div><div class="area" id="an"></div></div>
-<div class="pad"><button onclick="mv(0,-1)" aria-label="Up">▲</button><button onclick="mv(-1,0)" aria-label="Left">◀</button><button onclick="mv(0,1)" aria-label="Down">▼</button><button onclick="mv(1,0)" aria-label="Right">▶</button></div>
-<div class="q" id="qt"></div>
-<button style="display:block;margin:0 auto;background:none;border:0;color:var(--mut);font-size:12px;text-decoration:underline;min-height:0" onclick="if(confirm('Erase all progress?')){P=fresh();B=null;intro();hud();draw()}">Restart journey</button>
+<main class="gm">
+<div class="top"><div class="av"><img id="avi" alt="Hero"><b id="lvb"></b></div><div class="hb" id="hud"></div><div class="res" id="res"></div></div>
+<div class="mapw"><canvas id="cv" width="432" height="432"></canvas><div class="vig"></div><div class="area" id="an"></div></div>
+<div class="ctl"><div class="dpad"><button class="dp u" data-d="0,-1" aria-label="Up">▲</button><button class="dp l" data-d="-1,0" aria-label="Left">◀</button><i class="dc"></i><button class="dp r" data-d="1,0" aria-label="Right">▶</button><button class="dp d" data-d="0,1" aria-label="Down">▼</button></div>
+<div class="acts"><button class="act" onclick="usePill()"><span>💊</span><small id="pc"></small></button><button class="act" onclick="msg(goal())"><span>📜</span><small>Goal</small></button><button class="act" onclick="menu()"><span>⚙️</span><small>Menu</small></button></div></div>
+<div id="toast"></div>
 </main>
 <div class="ar" id="ar"><div class="stage" id="stg" data-a="0"><div class="pn" style="left:8px"><b id="pl-nm"></b><div id="pl-b"></div></div><div class="pn" style="right:8px"><b id="en-nm"></b><div id="en-b"></div></div><div class="fig pl" id="fp"></div><div class="fig en" id="fe"></div><div class="turn p" id="tn"></div></div><div class="log" id="lg"></div><div class="dock" id="bb"></div></div>
 <div id="modal"><div class="box" id="mb"></div></div>
@@ -145,15 +171,23 @@ const need=()=>40*P.lv;
 function save(){try{localStorage.setItem("dao3",JSON.stringify(P))}catch(e){}}
 function load(){try{const s=localStorage.getItem("dao3");if(s)return JSON.parse(s)}catch(e){}return null}
 const bar=(c,v,m,l)=>`<div class="row lab"><span>${l}</span><span>${Math.max(0,Math.ceil(v))}/${m}</span></div><div class="bar ${c}"><i style="width:${Math.max(0,Math.min(100,v/m*100))}%"></i></div>`;
+function goal(){return P.win?'Immortality achieved. You are the legend of the sect.':P.lv<3?'Goal: reach level 3, then enter the Jade Mist Forest (🌀 top right).':P.lv<5?'Goal: reach level 5, pass Bamboo Dusk Village and climb Celestial Snow Peak.':P.lv<7?'Goal: reach level 7 on the Snow Peak to unlock the Blood Demon Cave.':'Goal: defeat the Blood Demon at the end of the cave.'}
 function hud(){const r=R[Math.floor((P.lv-1)/3)];
- $('hud').innerHTML=`<div class="row"><span class="realm">${r} · Level ${P.lv}</span><span>🪙 ${P.gold} · 💊 ${P.pills} · ⚔️ ${P.atk}</span></div>${bar('hp',P.hp,P.mhp,'HP')}${bar('qi',P.qi,P.mq,'Qi')}${P.lv<9?bar('xp',P.exp,need(),'Experience'):''}`;
- $('an').textContent=AN[P.a];
- $('qt').textContent=P.win?'Immortality achieved. You are the legend of the sect.':P.lv<3?'Goal: reach level 3, then enter the Jade Mist Forest (🌀 top right).':P.lv<5?'Goal: reach level 5, pass Bamboo Dusk Village and climb Celestial Snow Peak.':P.lv<7?'Goal: reach level 7 on the Snow Peak to unlock the Blood Demon Cave.':'Goal: defeat the Blood Demon at the end of the cave.';
- save()}
+ $('hud').innerHTML=`<div class="rn">${r}${P.lv<9?' · EXP '+P.exp+'/'+need():' · MAX'}</div><div class="gb hp"><i style="width:${Math.max(0,P.hp/P.mhp*100)}%"></i><span>HP ${Math.max(0,Math.ceil(P.hp))}/${P.mhp}</span></div><div class="gb qi"><i style="width:${Math.max(0,P.qi/P.mq*100)}%"></i><span>Qi ${Math.ceil(P.qi)}/${P.mq}</span></div>${P.lv<9?`<div class="gb xp"><i style="width:${Math.min(100,P.exp/need()*100)}%"></i></div>`:''}`;
+ $('res').innerHTML=`<span class="rc">🪙 ${P.gold}</span><span class="rc">💊 ${P.pills}</span><span class="rc">⚔️ ${P.atk}</span>`;
+ $('lvb').textContent=P.lv;$('pc').textContent='×'+P.pills;$('an').textContent=AN[P.a];save()}
+function toast(t){const e=$('toast');e.textContent=t;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,1500)}
+function usePill(){if(B)return;if(P.pills<1)return toast('No Spirit Pills left');if(P.hp>=P.mhp)return toast('HP is already full');P.pills--;P.hp=Math.min(P.mhp,P.hp+60);toast('Spirit Pill: +60 HP');hud()}
+function menu(){show(`<div class="t">Menu</div><div class="btns"><button class="w" onclick="if(confirm('Erase all progress?')){P=fresh();B=null;closeM();intro();hud();draw()}">Restart journey</button><button class="w p" onclick="closeM()">Close</button></div>`)}
+function bindPad(){document.querySelectorAll('.dp').forEach(b=>{const q=b.dataset.d.split(',').map(Number);let t1,t2;const stop=()=>{clearTimeout(t1);clearInterval(t2)};b.addEventListener('pointerdown',e=>{e.preventDefault();mv(q[0],q[1]);stop();t1=setTimeout(()=>{t2=setInterval(()=>mv(q[0],q[1]),140)},320)});['pointerup','pointerleave','pointercancel'].forEach(v=>b.addEventListener(v,stop))})}
 const eIdx=(x,y)=>(x*3+y)%3;
 const TEX=['tile_sect','tile_forest','tile_village','tile_snow','tile_cave'],OBJ=['obj_tree','obj_tree','obj_bamboo','obj_ice','obj_rock'],OS=[1.2,1.2,1.6,1.6,1.35],PAT={};
 function pat(c,k){const i=IMG[k];if(!i||!i.naturalWidth)return null;return PAT[k]||(PAT[k]=c.createPattern(i,'repeat'))}
+const VC=9;let cam=0,camR=0;
 function draw(){const c=$('cv').getContext('2d');c.textAlign='center';c.textBaseline='middle';
+ const tg=Math.max(0,Math.min(13-VC,P.x-(VC>>1)));
+ if(Math.abs(cam-tg)>.01&&!camR){camR=1;requestAnimationFrame(()=>{camR=0;cam+=(tg-cam)*.4;if(Math.abs(cam-tg)<.03)cam=tg;draw()})}
+ c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,VC*T,9*T);c.save();c.translate(-Math.round(cam*T),0);
  const bg=pat(c,TEX[P.a]),wp=pat(c,'tile_water');
  c.fillStyle=bg||GC[P.a][0];c.fillRect(0,0,13*T,9*T);
  for(let y=0;y<9;y++)for(let x=0;x<13;x++){const t=M[P.a][y][x];
@@ -164,7 +198,8 @@ function draw(){const c=$('cv').getContext('2d');c.textAlign='center';c.textBase
   else if(t=='P'||t=='p'){n='obj_portal';s=1.05}else if(t=='C'&&!d){n='obj_chest';s=.9}
   else if(t=='e'&&!d)n=EN[P.a][eIdx(x,y)][0];else if(t=='B'&&!d){n='Blood Demon';s=1.6}
   if(n)drawSpr(c,n,x,y,s)}
- c.save();c.shadowColor='#5fd1a5';c.shadowBlur=16;if(!drawSpr(c,'Hero',P.x,P.y,1.2)){c.font='38px serif';c.fillText('🧙',P.x*T+T/2,P.y*T+T/2+2)}c.restore()}
+ c.save();c.shadowColor='#5fd1a5';c.shadowBlur=16;if(!drawSpr(c,'Hero',P.x,P.y,1.2)){c.font='38px serif';c.fillText('🧙',P.x*T+T/2,P.y*T+T/2+2)}c.restore();
+ c.restore()}
 function mv(dx,dy){if(B||$('modal').style.display=='flex')return;const nx=P.x+dx,ny=P.y+dy,t=M[P.a][ny]?.[nx];
  if(!t||t=='#'||t=='~')return;const k=P.a+':'+nx+':'+ny,d=gone(k,t);
  if(t=='e'&&!d)return fight(EN[P.a][eIdx(nx,ny)],k,0);
@@ -224,7 +259,7 @@ function lose(){B.done=1;B.res=1;P.hp=Math.ceil(P.mhp/2);P.gold=Math.floor(P.gol
 function ending(){B=null;$('ar').style.display='none';show(`<div class="t">道 Immortality</div><p>The Blood Demon is gone, and the Qi of heaven flows back into the sect. Elder Bai bows to you, and behind the clouds, the gates of heaven open.</p><p class="lab">You reached level ${P.lv} and carry ${P.gold} gold. The end, for now.</p><div class="btns"><button class="w p" onclick="closeM()">Return to the world</button></div>`)}
 document.addEventListener('keydown',e=>{const m={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(m){e.preventDefault();mv(...m)}});
 P=load()||fresh();P.rs=P.rs||{};P.st=P.st||0;P.dead=P.dead.filter(k=>{const q=k.split(':');return M[q[0]][q[2]][q[1]]!='e'});const areaKeys=a=>{const k=['Hero','obj_portal','obj_chest',TEX[a],OBJ[a]];if(a==0||a==2)k.push('tile_water');if(a==0)k.push('Elder Bai','Alchemist Lan');if(a==2)k.push('Healer Lian','Alchemist Lan','Village girl');EN[a].forEach(e=>k.push(e[0]));if(a==4)k.push('Blood Demon');return k};
-let started=0;function start(){if(started)return;started=1;hud();draw();$('ldr').style.display='none';if(!P.seen){P.seen=1;intro()}
+let started=0;function start(){if(started)return;started=1;$('avi').src=SPD.Hero||'';bindPad();cam=Math.max(0,Math.min(13-VC,P.x-(VC>>1)));hud();draw();$('ldr').style.display='none';if(!P.seen){P.seen=1;intro()}
  const rest=Object.keys(SRCM).filter(k=>!IMG[k]);rest.unshift(ARK[P.a]);let i=0;const nx=()=>{if(i<rest.length)loadImg(rest[i++]).then(()=>setTimeout(nx,30))};nx();nx()}
 function boot(){const ks=areaKeys(P.a),b=$('ldb'),t=$('ldp');let n=0;
  Promise.all(ks.map(k=>loadImg(k).then(()=>{n++;const p=Math.round(n/ks.length*100);b.style.width=p+'%';t.textContent='Loading... '+p+'%'}))).then(start);setTimeout(start,9000)}
