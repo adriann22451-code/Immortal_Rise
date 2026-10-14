@@ -295,8 +295,8 @@ function build3D(){if(!R3.r)return;const a=P.a,m=M[a],W=m[0].length,H=m.length,s
  const gm=new THREE.Mesh(new THREE.PlaneGeometry(W,H),new THREE.MeshBasicMaterial({map:gt,color:[0xffffff,0xd9f0e4,0xffe8cc,0xdfe9ff,0xffc0c0][a]}));gm.rotation.x=-Math.PI/2;gm.position.set(W/2,0,H/2);grp.add(gm);
  const gl=glowTex();
  const mk=(k,w,h,o)=>{const t=tex(k)||o;if(!t)return null;const q=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,transparent:true,alphaTest:.4,side:THREE.DoubleSide}));grp.add(q);return q};
- const sh=(x,z,w)=>{const q=new THREE.Mesh(new THREE.PlaneGeometry(w,w*.45),new THREE.MeshBasicMaterial({map:gl,color:0,transparent:true,opacity:.55,depthWrite:false}));q.rotation.x=-Math.PI/2;q.position.set(x,.02,z);grp.add(q);return q};
- const put=(k,w,h,x,z,key,t)=>{const q=mk(k,w,h);if(!q)return null;q.position.set(x,h/2,z);R3.bill.push(q);q.userData.sh=sh(x,z,Math.max(.6,w*.9));if(key)R3.byKey[key]=[q,q.userData.sh,t];return q};
+ const sh=(x,z,w,h)=>{const L=Math.min(3.4,Math.max(.8,w*.8+h*.35)),S=Math.min(2.4,Math.max(.5,w*.7)),ox=.12*L,oz=.16*L,q=new THREE.Mesh(new THREE.PlaneGeometry(L,S),new THREE.MeshBasicMaterial({map:gl,color:0,transparent:true,opacity:.6,depthWrite:false}));q.rotation.set(-Math.PI/2,0,Math.atan2(-.8,.6));q.position.set(x+ox,.025,z+oz);q.userData.o=[ox,oz];grp.add(q);return q};
+ const put=(k,w,h,x,z,key,t)=>{const q=mk(k,w,h);if(!q)return null;q.position.set(x,h/2-.03,z);R3.bill.push(q);q.userData.sh=sh(x,z,w,h);if(key)R3.byKey[key]=[q,q.userData.sh,t];return q};
  const spr=(k,s,x,y,key,t)=>{const i=IMG[k];if(!i||!i.naturalWidth)return null;const q=Math.min(s/i.naturalWidth,s/i.naturalHeight);return put(k,i.naturalWidth*q,i.naturalHeight*q,x+.5,y+.96,key,t)};
  const big=(k,wt,x,z)=>{const i=IMG[k];if(!i||!i.naturalWidth)return;put(k,wt,wt*i.naturalHeight/i.naturalWidth,x,z)};
  const glow=(col,size,x,y,z,op,f)=>{const q=new THREE.Mesh(new THREE.PlaneGeometry(size,size),new THREE.MeshBasicMaterial({map:gl,color:col,transparent:true,opacity:op,depthWrite:false,blending:THREE.AdditiveBlending}));q.position.set(x,y,z);grp.add(q);R3.bill.push(q);R3.glows.push({m:q,o:op,f:f,p:x*3})};
@@ -321,7 +321,7 @@ function loop3D(t){requestAnimationFrame(loop3D);if(!use3D||document.hidden||$('
  cm.position.set(h.x+Math.sin(c.yaw)*Math.cos(c.pitch)*c.dist,Math.sin(c.pitch)*c.dist,h.z+Math.cos(c.yaw)*Math.cos(c.pitch)*c.dist);cm.lookAt(h.x,.6,h.z);
  const px=cm.position.x,pz=cm.position.z;
  for(const q of R3.bill)q.rotation.y=Math.atan2(px-q.position.x,pz-q.position.z);
- if(R3.hero){R3.hero.position.x=h.x;R3.hero.position.z=h.z;const d=R3.hero.userData.sh;if(d){d.position.x=h.x;d.position.z=h.z}}
+ if(R3.hero){R3.hero.position.x=h.x;R3.hero.position.z=h.z;const d=R3.hero.userData.sh;if(d){d.position.x=h.x+d.userData.o[0];d.position.z=h.z+d.userData.o[1]}}
  for(const q of R3.spin)q.rotation.z+=.012;
  for(const q of R3.glows)q.m.material.opacity=q.o*(.75+.25*Math.sin(t/q.f+q.p));
  for(const p of R3.parts){const a=p.arr;for(let i=0;i<p.vel.length;i++){const j=i*3;if(p.k=='r'){a[j+1]+=p.vel[i]*.006;a[j]+=Math.sin(t/700+i)*.004;if(a[j+1]>3.4){a[j+1]=0;a[j]=Math.random()*p.W;a[j+2]=Math.random()*p.H}}else{a[j+1]-=p.vel[i]*.012;a[j]+=Math.sin(t/900+i)*.006+.003;if(a[j+1]<0){a[j+1]=3.4;a[j]=Math.random()*p.W;a[j+2]=Math.random()*p.H}}}p.pts.geometry.attributes.position.needsUpdate=true}
